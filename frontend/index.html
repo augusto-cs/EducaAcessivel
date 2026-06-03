@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EducaAcessível</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>EducaAcessível</h1>
+        <p>Simplifique textos complexos e gere áudios automaticamente para seus alunos.</p>
+        
+        <textarea id="textoOriginal" placeholder="Cole o conteúdo da aula aqui..." oninput="contarCaracteres()"></textarea>
+        <div class="status-container">
+            <span id="charCount">0 / 5000 caracteres</span>
+            <div id="spinner" class="spinner"></div>
+        </div>
+        
+        <button id="btnProcessar" onclick="simplificar()">Gerar Material Acessível</button>
+
+        <div id="resultado" class="resultado">
+            <h2>Versão em Linguagem Simples:</h2>
+            <p id="textoSimples"></p>
+            
+            <div class="input-group">
+                <label>Nome do arquivo: </label>
+                <input type="text" id="nomeArquivo" value="aula_acessivel">
+            </div>
+            
+            <audio id="playerAudio" controls></audio>
+            
+            <button id="btnDownload" onclick="baixarAudio()" style="background-color: #28a745; margin-top: 10px;">Baixar Áudio</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
