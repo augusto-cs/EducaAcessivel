@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import google.generativeai as genai
+from google import genai 
 from gtts import gTTS
 from dotenv import load_dotenv
 
@@ -10,8 +10,7 @@ load_dotenv()
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-model = genai.GenerativeModel('gemini-pro')
+client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 STATIC_DIR = os.path.join(os.getcwd(), 'static')
 if not os.path.exists(STATIC_DIR):
@@ -53,7 +52,10 @@ def simplificar_e_gerar_audio():
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
         texto_simples = response.text.strip()
         
         nome_arquivo = "audio_atual.mp3"
