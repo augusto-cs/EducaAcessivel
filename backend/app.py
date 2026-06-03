@@ -12,7 +12,9 @@ CORS(app)
 
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
-STATIC_DIR = os.path.join(os.getcwd(), 'static')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
 if not os.path.exists(STATIC_DIR):
     os.makedirs(STATIC_DIR)
 

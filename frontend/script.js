@@ -40,6 +40,7 @@ async function simplificar() {
             resultadoTexto.innerText = data.texto_simplificado;
             
             playerAudio.src = `${API_URL}${data.audio_url}?t=${new Date().getTime()}`;
+            playerAudio.load();
             
             if (resultadoContainer) resultadoContainer.style.display = 'block';
         } else {
