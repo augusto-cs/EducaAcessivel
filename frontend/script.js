@@ -25,7 +25,7 @@ async function simplificar() {
     }
 
     botao.disabled = true;
-    if (spinner) spinner.style.display = 'inline-block';a
+    if (spinner) spinner.style.display = 'inline-block';
 
     try {
         const response = await fetch(`${API_URL}/api/simplificar`, {
