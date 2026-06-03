@@ -1,24 +1,25 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import google.generativeai as genai
 from gtts import gTTS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel('gemini-1.5-flash')
 
+STATIC_DIR = os.path.join(os.getcwd(), 'static')
 if not os.path.exists(STATIC_DIR):
     os.makedirs(STATIC_DIR)
 
-GOOGLE_API_KEY = "API"
-genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-3.5-flash')
-
-if not os.path.exists('static'):
-    os.makedirs('static')
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(STATIC_DIR, filename)
 
 @app.route('/api/simplificar', methods=['POST'])
 def simplificar_e_gerar_audio():
@@ -53,10 +54,9 @@ def simplificar_e_gerar_audio():
         tts = gTTS(text=texto_simples, lang='pt', tld='com.br')
         tts.save(caminho_arquivo)
         
-        url_audio = f"http://127.0.0.1:5000/static/{nome_arquivo}?t={os.path.getmtime(caminho_arquivo)}"
+        url_audio = f"/static/{nome_arquivo}"
         
         return jsonify({
-            "texto_original": texto_complexo,
             "texto_simplificado": texto_simples,
             "audio_url": url_audio
         }), 200
@@ -65,5 +65,5 @@ def simplificar_e_gerar_audio():
         return jsonify({"erro": str(e)}), 500
 
 if __name__ == '__main__':
-    print("🚀 Servidor da API rodando na porta 5000...")
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
