@@ -10,17 +10,30 @@ load_dotenv()
 app = Flask(__name__, static_folder='static')
 CORS(app)
 
+# Configuração da API
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
+# Garante que a pasta static existe
 STATIC_DIR = os.path.join(os.getcwd(), 'static')
 if not os.path.exists(STATIC_DIR):
     os.makedirs(STATIC_DIR)
 
+# Rotas do Front-end
+@app.route('/')
+def index():
+    return send_from_directory('../frontend', 'index.html')
+
+@app.route('/<path:path>')
+def serve_frontend(path):
+    return send_from_directory('../frontend', path)
+
+# Rota para arquivos estáticos (áudio)
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     return send_from_directory(STATIC_DIR, filename)
 
+# Rota da API
 @app.route('/api/simplificar', methods=['POST'])
 def simplificar_e_gerar_audio():
     dados = request.get_json()
